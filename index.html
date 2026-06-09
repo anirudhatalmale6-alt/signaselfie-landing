@@ -1,0 +1,1486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign a Selfie - Turn Your Selfie Into a Signed Memory</title>
+    <meta name="description" content="Take selfies with celebrities and get them digitally signed. Snap it, sign it, share it. Available soon on iOS and Android.">
+    <meta property="og:title" content="Sign a Selfie - Turn Your Selfie Into a Signed Memory">
+    <meta property="og:description" content="Take selfies with celebrities and get them digitally signed. Snap it, sign it, share it.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://signaselfie.com.au">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6C3CE1;
+            --primary-dark: #5A2DC5;
+            --primary-light: #8B5CF6;
+            --secondary: #F59E0B;
+            --secondary-light: #FBBF24;
+            --dark: #0F172A;
+            --dark-2: #1E293B;
+            --gray: #64748B;
+            --gray-light: #94A3B8;
+            --light: #F8FAFC;
+            --white: #FFFFFF;
+            --gradient: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            --gradient-warm: linear-gradient(135deg, var(--secondary) 0%, #F97316 100%);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+            background: var(--white);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* NAVIGATION */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0,0,0,0.06);
+            transition: box-shadow 0.3s ease;
+        }
+
+        nav.scrolled {
+            box-shadow: 0 4px 30px rgba(0,0,0,0.08);
+        }
+
+        .nav-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 72px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            font-weight: 800;
+            font-size: 1.25rem;
+            color: var(--dark);
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--gray);
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-cta {
+            background: var(--gradient);
+            color: white !important;
+            padding: 10px 24px;
+            border-radius: 50px;
+            font-weight: 600 !important;
+            transition: transform 0.2s, box-shadow 0.2s !important;
+        }
+
+        .nav-cta:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(108, 60, 225, 0.4);
+        }
+
+        .mobile-toggle {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        .mobile-toggle span {
+            display: block;
+            width: 24px;
+            height: 2px;
+            background: var(--dark);
+            margin: 6px 0;
+            transition: 0.3s;
+            border-radius: 2px;
+        }
+
+        /* HERO */
+        .hero {
+            padding: 140px 0 80px;
+            background: linear-gradient(180deg, #F5F0FF 0%, var(--white) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(108, 60, 225, 0.08) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(108, 60, 225, 0.1);
+            color: var(--primary);
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+
+        .hero-badge span {
+            width: 8px;
+            height: 8px;
+            background: var(--secondary);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.5); }
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            color: var(--dark);
+        }
+
+        .hero h1 .highlight {
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.15rem;
+            color: var(--gray);
+            margin-bottom: 36px;
+            max-width: 500px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--gradient);
+            color: white;
+            padding: 16px 32px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(108, 60, 225, 0.4);
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--white);
+            color: var(--dark);
+            padding: 16px 32px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            border: 2px solid #E2E8F0;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .hero-visual {
+            position: relative;
+            display: flex;
+            justify-content: center;
+        }
+
+        .phone-mockup {
+            width: 300px;
+            height: 600px;
+            background: var(--dark);
+            border-radius: 40px;
+            padding: 12px;
+            box-shadow: 0 40px 80px rgba(0,0,0,0.15), 0 0 0 1px rgba(255,255,255,0.1) inset;
+            position: relative;
+        }
+
+        .phone-screen {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(160deg, var(--primary) 0%, #4F1DAD 50%, var(--primary-dark) 100%);
+            border-radius: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            padding: 30px;
+            text-align: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .phone-screen::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 28px;
+            background: var(--dark);
+            border-radius: 0 0 16px 16px;
+        }
+
+        .phone-screen .selfie-icon {
+            font-size: 4rem;
+            margin-bottom: 16px;
+            margin-top: 20px;
+        }
+
+        .phone-screen h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .phone-screen p {
+            font-size: 0.85rem;
+            opacity: 0.8;
+            margin-bottom: 24px;
+        }
+
+        .phone-btn {
+            background: var(--secondary);
+            color: var(--dark);
+            padding: 12px 28px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .floating-card {
+            position: absolute;
+            background: white;
+            border-radius: 16px;
+            padding: 16px 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .floating-card.card-1 {
+            top: 80px;
+            left: -40px;
+            animation-delay: 0s;
+        }
+
+        .floating-card.card-2 {
+            bottom: 100px;
+            right: -40px;
+            animation-delay: 1.5s;
+        }
+
+        .floating-card .icon-circle {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .floating-card .card-text {
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+
+        .floating-card .card-value {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* HOW IT WORKS */
+        .how-it-works {
+            padding: 100px 0;
+            background: var(--white);
+        }
+
+        .section-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 20px;
+            color: var(--dark);
+        }
+
+        .section-subtitle {
+            font-size: 1.1rem;
+            color: var(--gray);
+            max-width: 600px;
+            margin-bottom: 60px;
+        }
+
+        .section-header-center {
+            text-align: center;
+        }
+
+        .section-header-center .section-subtitle {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+            position: relative;
+        }
+
+        .steps-grid::before {
+            content: '';
+            position: absolute;
+            top: 60px;
+            left: 15%;
+            right: 15%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            opacity: 0.2;
+        }
+
+        .step-card {
+            text-align: center;
+            position: relative;
+        }
+
+        .step-number {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            font-size: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-card:nth-child(1) .step-number {
+            background: linear-gradient(135deg, #EDE9FE, #DDD6FE);
+        }
+        .step-card:nth-child(2) .step-number {
+            background: linear-gradient(135deg, #FEF3C7, #FDE68A);
+        }
+        .step-card:nth-child(3) .step-number {
+            background: linear-gradient(135deg, #D1FAE5, #A7F3D0);
+        }
+
+        .step-card h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--dark);
+        }
+
+        .step-card p {
+            color: var(--gray);
+            font-size: 0.95rem;
+            max-width: 280px;
+            margin: 0 auto;
+        }
+
+        /* FEATURES */
+        .features {
+            padding: 100px 0;
+            background: var(--light);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .feature-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 36px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid rgba(0,0,0,0.04);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+        }
+
+        .feature-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        .feature-card:nth-child(1) .feature-icon { background: #EDE9FE; }
+        .feature-card:nth-child(2) .feature-icon { background: #FEF3C7; }
+        .feature-card:nth-child(3) .feature-icon { background: #DBEAFE; }
+        .feature-card:nth-child(4) .feature-icon { background: #D1FAE5; }
+        .feature-card:nth-child(5) .feature-icon { background: #FCE7F3; }
+        .feature-card:nth-child(6) .feature-icon { background: #FEE2E2; }
+
+        .feature-card h3 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+
+        .feature-card p {
+            color: var(--gray);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        /* APP PREVIEW */
+        .app-preview {
+            padding: 100px 0;
+            background: var(--white);
+        }
+
+        .preview-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+        }
+
+        .preview-visual {
+            position: relative;
+            display: flex;
+            justify-content: center;
+        }
+
+        .preview-phone {
+            width: 260px;
+            height: 520px;
+            background: var(--dark);
+            border-radius: 36px;
+            padding: 10px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.12);
+        }
+
+        .preview-screen {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(160deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            border-radius: 28px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 50px 20px 20px;
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .preview-screen::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 24px;
+            background: var(--dark);
+            border-radius: 0 0 14px 14px;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            width: 100%;
+            margin-top: 16px;
+        }
+
+        .gallery-item {
+            aspect-ratio: 1;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+
+        .gallery-item:nth-child(1) { background: linear-gradient(135deg, #6C3CE1, #8B5CF6); }
+        .gallery-item:nth-child(2) { background: linear-gradient(135deg, #F59E0B, #F97316); }
+        .gallery-item:nth-child(3) { background: linear-gradient(135deg, #10B981, #34D399); }
+        .gallery-item:nth-child(4) { background: linear-gradient(135deg, #EC4899, #F472B6); }
+
+        .preview-content .check-list {
+            list-style: none;
+            margin: 32px 0;
+        }
+
+        .check-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 16px;
+            font-size: 1rem;
+            color: var(--dark-2);
+        }
+
+        .check-list .check-icon {
+            width: 24px;
+            height: 24px;
+            background: #D1FAE5;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-top: 2px;
+            color: #059669;
+            font-size: 0.75rem;
+        }
+
+        /* CTA / DOWNLOAD */
+        .cta-section {
+            padding: 100px 0;
+            background: linear-gradient(135deg, var(--dark) 0%, #1a1145 50%, var(--primary-dark) 100%);
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: -200px;
+            left: -200px;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(108, 60, 225, 0.2), transparent 70%);
+            border-radius: 50%;
+        }
+
+        .cta-section::after {
+            content: '';
+            position: absolute;
+            bottom: -200px;
+            right: -200px;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(245, 158, 11, 0.15), transparent 70%);
+            border-radius: 50%;
+        }
+
+        .cta-section h2 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-section p {
+            font-size: 1.15rem;
+            opacity: 0.8;
+            max-width: 500px;
+            margin: 0 auto 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .store-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 1;
+        }
+
+        .store-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            padding: 14px 28px;
+            border-radius: 14px;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .store-btn:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-2px);
+        }
+
+        .store-btn .store-icon {
+            font-size: 1.8rem;
+        }
+
+        .store-btn .store-text {
+            text-align: left;
+        }
+
+        .store-btn .store-text small {
+            display: block;
+            font-size: 0.7rem;
+            opacity: 0.7;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .store-btn .store-text strong {
+            display: block;
+            font-size: 1.05rem;
+            font-weight: 700;
+        }
+
+        /* NOTIFY FORM */
+        .notify-section {
+            padding: 80px 0;
+            background: var(--light);
+            text-align: center;
+        }
+
+        .notify-form {
+            display: flex;
+            max-width: 500px;
+            margin: 0 auto;
+            gap: 12px;
+        }
+
+        .notify-form input {
+            flex: 1;
+            padding: 16px 24px;
+            border: 2px solid #E2E8F0;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .notify-form input:focus {
+            border-color: var(--primary);
+        }
+
+        .notify-form button {
+            padding: 16px 32px;
+            background: var(--gradient);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            white-space: nowrap;
+            font-family: inherit;
+        }
+
+        .notify-form button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(108, 60, 225, 0.4);
+        }
+
+        /* CONTACT */
+        .contact-section {
+            padding: 80px 0;
+            background: var(--white);
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: start;
+        }
+
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .contact-form input,
+        .contact-form textarea {
+            padding: 16px 20px;
+            border: 2px solid #E2E8F0;
+            border-radius: 14px;
+            font-size: 1rem;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.2s;
+            resize: vertical;
+        }
+
+        .contact-form input:focus,
+        .contact-form textarea:focus {
+            border-color: var(--primary);
+        }
+
+        .contact-form textarea {
+            min-height: 140px;
+        }
+
+        .contact-info-card {
+            background: var(--light);
+            border-radius: 20px;
+            padding: 40px;
+        }
+
+        .contact-info-card h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 24px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .contact-item .ci-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(108, 60, 225, 0.1);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .contact-item .ci-text {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+
+        .contact-item .ci-value {
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 1rem;
+        }
+
+        /* FOOTER */
+        footer {
+            background: var(--dark);
+            color: rgba(255,255,255,0.7);
+            padding: 60px 0 30px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 60px;
+            margin-bottom: 40px;
+        }
+
+        .footer-brand .logo {
+            color: white;
+            margin-bottom: 16px;
+        }
+
+        .footer-brand .logo-icon {
+            background: var(--gradient);
+        }
+
+        .footer-brand p {
+            font-size: 0.9rem;
+            line-height: 1.7;
+            max-width: 300px;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .footer-social a {
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255,255,255,0.6);
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 1.1rem;
+        }
+
+        .footer-social a:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .footer-col h4 {
+            color: white;
+            font-weight: 700;
+            margin-bottom: 20px;
+            font-size: 1rem;
+        }
+
+        .footer-col ul {
+            list-style: none;
+        }
+
+        .footer-col ul li {
+            margin-bottom: 12px;
+        }
+
+        .footer-col ul a {
+            color: rgba(255,255,255,0.6);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+
+        .footer-col ul a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.08);
+            padding-top: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 968px) {
+            .hero-grid {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .hero p {
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .hero-buttons {
+                justify-content: center;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-visual {
+                order: -1;
+            }
+
+            .phone-mockup {
+                width: 240px;
+                height: 480px;
+            }
+
+            .floating-card.card-1 {
+                left: 10px;
+            }
+
+            .floating-card.card-2 {
+                right: 10px;
+            }
+
+            .steps-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .steps-grid::before {
+                display: none;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .preview-grid {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .preview-visual {
+                order: -1;
+            }
+
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .cta-section h2 {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 72px;
+                left: 0;
+                right: 0;
+                background: white;
+                flex-direction: column;
+                padding: 24px;
+                gap: 16px;
+                box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .mobile-toggle {
+                display: block;
+            }
+
+            .hero {
+                padding: 120px 0 60px;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .notify-form {
+                flex-direction: column;
+            }
+
+            .store-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                gap: 12px;
+                text-align: center;
+            }
+        }
+
+        /* ANIMATIONS */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVIGATION -->
+    <nav id="navbar">
+        <div class="container nav-inner">
+            <a href="#" class="logo">
+                <div class="logo-icon">&#x270B;</div>
+                Sign a Selfie
+            </a>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#how-it-works">How It Works</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#app-preview">The App</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li><a href="#download" class="nav-cta">Get the App</a></li>
+            </ul>
+            <button class="mobile-toggle" id="mobileToggle" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero" id="home">
+        <div class="container">
+            <div class="hero-grid">
+                <div class="hero-content">
+                    <div class="hero-badge">
+                        <span></span> Coming Soon to iOS &amp; Android
+                    </div>
+                    <h1>Turn Your Selfie Into a <span class="highlight">Signed Memory</span></h1>
+                    <p>Snap a selfie with your favourite celebrity, get it digitally signed, and keep it forever. Your moment, authenticated and unforgettable.</p>
+                    <div class="hero-buttons">
+                        <a href="#download" class="btn-primary">
+                            Get Notified at Launch &#x2192;
+                        </a>
+                        <a href="#how-it-works" class="btn-secondary">
+                            &#x25B6; See How It Works
+                        </a>
+                    </div>
+                </div>
+                <div class="hero-visual">
+                    <div class="phone-mockup">
+                        <div class="phone-screen">
+                            <div class="selfie-icon">&#x1F933;</div>
+                            <h3>Sign a Selfie</h3>
+                            <p>Your signed celebrity moments</p>
+                            <div class="phone-btn">Snap &amp; Sign</div>
+                        </div>
+                    </div>
+                    <div class="floating-card card-1">
+                        <div class="icon-circle" style="background:#EDE9FE;">&#x2728;</div>
+                        <div>
+                            <div class="card-text">Signed</div>
+                            <div class="card-value">Authenticated</div>
+                        </div>
+                    </div>
+                    <div class="floating-card card-2">
+                        <div class="icon-circle" style="background:#FEF3C7;">&#x1F31F;</div>
+                        <div>
+                            <div class="card-text">Memories</div>
+                            <div class="card-value">Unforgettable</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="how-it-works" id="how-it-works">
+        <div class="container">
+            <div class="section-header-center">
+                <div class="section-label">&#x2728; How It Works</div>
+                <h2 class="section-title">Three Simple Steps</h2>
+                <p class="section-subtitle">Getting your signed selfie is as easy as 1-2-3. No fuss, no waiting in line, just pure magic.</p>
+            </div>
+            <div class="steps-grid">
+                <div class="step-card fade-up">
+                    <div class="step-number">&#x1F4F8;</div>
+                    <h3>Snap Your Selfie</h3>
+                    <p>Take a selfie with your favourite celebrity at an event, meet-and-greet, or anywhere you spot them.</p>
+                </div>
+                <div class="step-card fade-up">
+                    <div class="step-number">&#x270D;&#xFE0F;</div>
+                    <h3>Get It Signed</h3>
+                    <p>Upload your selfie and request a digital signature. The celebrity signs it through our secure platform.</p>
+                </div>
+                <div class="step-card fade-up">
+                    <div class="step-number">&#x1F389;</div>
+                    <h3>Share &amp; Keep Forever</h3>
+                    <p>Download your signed selfie, share it on social media, or keep it in your personal collection.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FEATURES -->
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-header-center">
+                <div class="section-label">&#x1F680; Features</div>
+                <h2 class="section-title">Everything You Need</h2>
+                <p class="section-subtitle">Packed with features that make collecting signed selfies a seamless, fun experience.</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card fade-up">
+                    <div class="feature-icon">&#x1F512;</div>
+                    <h3>Verified Signatures</h3>
+                    <p>Every digital signature is authenticated and verified, so you know it's the real deal.</p>
+                </div>
+                <div class="feature-card fade-up">
+                    <div class="feature-icon">&#x26A1;</div>
+                    <h3>Instant Delivery</h3>
+                    <p>Get your signed selfie delivered to your phone in minutes, not days or weeks.</p>
+                </div>
+                <div class="feature-card fade-up">
+                    <div class="feature-icon">&#x2601;&#xFE0F;</div>
+                    <h3>Cloud Collection</h3>
+                    <p>All your signed selfies are safely stored in the cloud. Access them anytime, anywhere.</p>
+                </div>
+                <div class="feature-card fade-up">
+                    <div class="feature-icon">&#x1F30D;</div>
+                    <h3>Share Everywhere</h3>
+                    <p>One tap sharing to Instagram, Facebook, X, TikTok, and all your favourite platforms.</p>
+                </div>
+                <div class="feature-card fade-up">
+                    <div class="feature-icon">&#x1F3A8;</div>
+                    <h3>Custom Frames</h3>
+                    <p>Choose from stylish frames and filters to make your signed selfie stand out.</p>
+                </div>
+                <div class="feature-card fade-up">
+                    <div class="feature-icon">&#x1F6E1;&#xFE0F;</div>
+                    <h3>Secure &amp; Private</h3>
+                    <p>Your photos and data are encrypted end-to-end. Your privacy is our top priority.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- APP PREVIEW -->
+    <section class="app-preview" id="app-preview">
+        <div class="container">
+            <div class="preview-grid">
+                <div class="preview-visual fade-up">
+                    <div class="preview-phone">
+                        <div class="preview-screen">
+                            <p style="font-size:0.8rem;opacity:0.7;margin-top:20px;">Your Collection</p>
+                            <h3 style="font-size:1.1rem;margin:8px 0 16px;">Signed Selfies</h3>
+                            <div class="gallery-grid">
+                                <div class="gallery-item">&#x1F933;</div>
+                                <div class="gallery-item">&#x1F31F;</div>
+                                <div class="gallery-item">&#x2728;</div>
+                                <div class="gallery-item">&#x1F4F8;</div>
+                            </div>
+                            <div style="margin-top:16px;background:rgba(255,255,255,0.1);border-radius:12px;padding:12px;width:100%;text-align:center;">
+                                <small style="opacity:0.7;">Total Signed</small>
+                                <div style="font-size:1.5rem;font-weight:800;">24</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="preview-content fade-up">
+                    <div class="section-label">&#x1F4F1; The App</div>
+                    <h2 class="section-title">Your Personal Collection of Signed Moments</h2>
+                    <p class="section-subtitle">Build a gallery of authenticated, signed selfies with the people who inspire you most.</p>
+                    <ul class="check-list">
+                        <li>
+                            <span class="check-icon">&#x2713;</span>
+                            <span>Browse trending celebrities and public figures</span>
+                        </li>
+                        <li>
+                            <span class="check-icon">&#x2713;</span>
+                            <span>Request signatures with a single tap</span>
+                        </li>
+                        <li>
+                            <span class="check-icon">&#x2713;</span>
+                            <span>Get notified when your selfie is signed</span>
+                        </li>
+                        <li>
+                            <span class="check-icon">&#x2713;</span>
+                            <span>Export high-resolution prints for framing</span>
+                        </li>
+                        <li>
+                            <span class="check-icon">&#x2713;</span>
+                            <span>Free to download, no hidden fees</span>
+                        </li>
+                    </ul>
+                    <a href="#download" class="btn-primary">Get Early Access &#x2192;</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- DOWNLOAD CTA -->
+    <section class="cta-section" id="download">
+        <div class="container">
+            <h2 class="fade-up">Get Sign a Selfie</h2>
+            <p class="fade-up">Be the first to know when the app launches. Join the waitlist and get exclusive early access.</p>
+            <div class="store-buttons fade-up">
+                <a href="#" class="store-btn">
+                    <span class="store-icon">&#xF8FF;</span>
+                    <span class="store-text">
+                        <small>Download on the</small>
+                        <strong>App Store</strong>
+                    </span>
+                </a>
+                <a href="#" class="store-btn">
+                    <span class="store-icon">&#x25B6;</span>
+                    <span class="store-text">
+                        <small>Get it on</small>
+                        <strong>Google Play</strong>
+                    </span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- NOTIFY -->
+    <section class="notify-section" id="notify">
+        <div class="container">
+            <div class="section-header-center">
+                <div class="section-label">&#x1F514; Stay Updated</div>
+                <h2 class="section-title">Get Notified at Launch</h2>
+                <p class="section-subtitle">Drop your email and be the first to know when Sign a Selfie goes live.</p>
+            </div>
+            <form class="notify-form" id="notifyForm">
+                <input type="email" placeholder="Enter your email address" required>
+                <button type="submit">Notify Me</button>
+            </form>
+            <p style="color:var(--gray-light);font-size:0.8rem;margin-top:12px;">No spam. Just one email when we launch.</p>
+        </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="contact-section" id="contact">
+        <div class="container">
+            <div class="section-header-center">
+                <div class="section-label">&#x1F4EC; Get in Touch</div>
+                <h2 class="section-title">Contact Us</h2>
+                <p class="section-subtitle">Have questions? We'd love to hear from you.</p>
+            </div>
+            <div class="contact-grid">
+                <form class="contact-form" id="contactForm">
+                    <input type="text" placeholder="Your Name" required>
+                    <input type="email" placeholder="Your Email" required>
+                    <input type="text" placeholder="Subject">
+                    <textarea placeholder="Your Message" required></textarea>
+                    <button type="submit" class="btn-primary" style="align-self:flex-start;">Send Message &#x2192;</button>
+                </form>
+                <div class="contact-info-card">
+                    <h3>Contact Information</h3>
+                    <div class="contact-item">
+                        <div class="ci-icon">&#x1F4E7;</div>
+                        <div>
+                            <div class="ci-text">Email us at</div>
+                            <div class="ci-value">hello@signaselfie.com.au</div>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="ci-icon">&#x1F4CD;</div>
+                        <div>
+                            <div class="ci-text">Based in</div>
+                            <div class="ci-value">Australia</div>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="ci-icon">&#x1F4F1;</div>
+                        <div>
+                            <div class="ci-text">Follow us</div>
+                            <div class="ci-value">@signaselfie</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="#" class="logo">
+                        <div class="logo-icon">&#x270B;</div>
+                        Sign a Selfie
+                    </a>
+                    <p>Turn your selfies into signed memories. Snap, sign, and share moments with the people who inspire you.</p>
+                    <div class="footer-social">
+                        <a href="#" aria-label="Facebook">f</a>
+                        <a href="#" aria-label="Instagram">&#x1F4F7;</a>
+                        <a href="#" aria-label="TikTok">&#x266B;</a>
+                        <a href="#" aria-label="X/Twitter">X</a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#how-it-works">How It Works</a></li>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <span>&copy; 2026 Sign a Selfie. All rights reserved.</span>
+                <span>signaselfie.com.au</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobileToggle').addEventListener('click', function() {
+            document.getElementById('navLinks').classList.toggle('active');
+        });
+
+        // Close mobile menu on link click
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                document.getElementById('navLinks').classList.remove('active');
+            });
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20);
+        });
+
+        // Scroll animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+        // Notify form
+        document.getElementById('notifyForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const input = this.querySelector('input');
+            const email = input.value;
+            input.value = '';
+            this.innerHTML = '<p style="color:var(--primary);font-weight:600;font-size:1.1rem;">Thanks! We\'ll notify you at launch. &#x1F389;</p>';
+        });
+
+        // Contact form
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            this.innerHTML = '<div style="text-align:center;padding:40px;"><p style="font-size:1.2rem;font-weight:600;color:var(--primary);">Message sent! &#x2705;</p><p style="color:var(--gray);margin-top:8px;">We\'ll get back to you soon.</p></div>';
+        });
+    </script>
+
+</body>
+</html>
